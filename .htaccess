@@ -1,0 +1,12 @@
+Options -Indexes
+ErrorDocument 403 /earlgit/w3b-template/data/403.html
+ErrorDocument 404 /earlgit/w3b-template/data/404.html
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /earlgit/w3b-template/
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php [L]
+</IfModule>

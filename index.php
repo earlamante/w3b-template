@@ -1,3 +1,5 @@
 <?php
-	// Just another blank page
+	require_once('lib/w3b.class.php');
+	
+	$w3b->run();
 ?>
