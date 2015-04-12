@@ -1,12 +1,11 @@
-Options -Indexes
-ErrorDocument 403 /earlgit/w3b-template/data/403.php
-ErrorDocument 404 /earlgit/w3b-template/data/404.php
-
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteBase /earlgit/w3b-template/
 RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . index.php [L]
+RewriteRule ^(.*)$ index.php/$1 [L]
 </IfModule>
+
+# Options -Indexes is important to provide protection to the folders especially the views/ folder
+Options -Indexes
+ErrorDocument 403 /data/403.php

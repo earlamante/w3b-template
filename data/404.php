@@ -1,6 +1,6 @@
 <?php
 	if(empty($url))
-		$url = str_replace('404.php', '', $_SERVER['PHP_SELF']);
+		$url = explode('index.php', $_SERVER['PHP_SELF'])[0].'data/';
 ?>
 <html>
 	<head>
