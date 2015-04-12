@@ -1,4 +1,8 @@
 body { font-family: arial, helvetica, clean, sans-serif; padding: 200px; font-size: 16px; }
-div { border: 1px dotted #f33; padding: 50px; }
-h1 { color: #f00; }
+body.admin { padding: 50px 200px; }
+body > div { border: 1px dotted #f33; padding: 50px 50px 30px; }
+h1, h1 a, p.notif { color: #f00; margin: 0 0 20px; }
 img { width: 75px; vertical-align: text-top; }
+a { text-decoration: none; }
+label { font-weight: bold; }
+input, select { margin: 0 5px 10px; }

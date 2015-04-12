@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>W3B Template Page</title>
+		<title>{{title}} | {{site_name}}</title>
 		
 		<style type="text/css">
 			body { font-family: arial, helvetica, clean, sans-serif; padding: 200px; font-size: 16px; }
