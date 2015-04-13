@@ -56,9 +56,8 @@
 				if( $this->config->page_layout[$y] === 'body' ) {
 					$filename = $this->template_file;
 					
-					if($this->_check_admin()) {
+					if($this->in_admin=$this->_check_admin()) {
 						$this->config->page_layout = array('data/admin.tpl.php');
-						$this->_start_admin();
 						$this->load_data = FALSE;
 						break;
 					}
@@ -190,7 +189,7 @@
 				if($target) {
 					$key = $target;
 					if($target=='homepage')
-						$key = 'index';
+						$key = $this->config->default_filename;
 					
 					$nodes = $pages;
 					foreach( explode('/', $key) as $node ) {
@@ -240,6 +239,9 @@
 		
 		// Front Page
 		public function run() {
+			if($this->in_admin)
+				$this->_start_admin();
+			
 			$this->print_output($this->get_data());
 		}
 		
@@ -266,14 +268,19 @@
 			include($page);
 			return ob_get_clean();
 		}
+		
+		// Helper
+		public function site_url() {
+			return strip_trailing_slash($this->config->site_url,'/');
+		}
 	}
 	
 	$w3b = new W3B();
 	
 	// Helpers Section
 	function site_url() {
-		global $config;
-		return strip_trailing_slash($config['site_url'],'/');
+		global $w3b;
+		return $w3b->site_url();
 	}
 	
 	function strip_trailing_slash($text, $append='', $both=FALSE) {
