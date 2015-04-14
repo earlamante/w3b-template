@@ -15,4 +15,7 @@
 									'footer'
 								)
 	);
+	
+	// for encryption
+	define('W3B_CODERING', 'cEtEaU5qdXJkZm5xdmtJYWxoUEZnbUpDenlPTXhjTHRIR293YkVCZUFze1t8fF19YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXpBQkNERUZHSElKS0xNTk9Q==');
 ?>

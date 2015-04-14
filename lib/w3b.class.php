@@ -1,6 +1,6 @@
 <?php
-	include('dm.class.php');
 	include('cfg/settings.php');
+	include('dm.class.php');
 	
 	class W3B extends Data_Manager {
 		var $site = array();
