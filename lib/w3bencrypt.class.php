@@ -83,6 +83,4 @@
 			return base64_encode($naked);
 		}
 	}
-	
-	$code = new W3B_Code;
 ?>
