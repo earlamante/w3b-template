@@ -2,6 +2,19 @@
 	<head>
 		<title>{{site_name}}</title>
 		<script src="<?php echo site_url(); ?>data/js/jquery-1.8.2.min.js" type="text/javascript"></script>
+		<script src="<?php echo site_url(); ?>data/js/tinymce/tinymce.min.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			tinymce.init({
+				selector: ".wysiwyg",
+				menubar: false,
+				plugins: [
+					"advlist autolink lists link image charmap print preview anchor",
+					"searchreplace visualblocks code",
+					"insertdatetime media table contextmenu paste"
+				],
+				toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+			});
+		</script>
 		<link href="<?php echo site_url(); ?>data/css/style.css" rel="stylesheet" />
 	</head>
 	<body class="admin">

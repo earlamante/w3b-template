@@ -155,33 +155,60 @@
 			$this->pages['page_schema'] = $pages;
 			$this->pages['page_list'] = $this->_prepare_page_list($pages);
 			
+			if(($target=$this->_get_target())) {
+				$filename = preg_replace('/\/?\?.*$/', '', $target);
+				$filename = str_replace('/', '_', $filename);
+				
+				if($target=='homepage')
+					$filename = $this->config->default_filename;
+			}
+			else
+				$filename = 'admin';
+			
+			$this->data_file = ($filename) . '.png';
+			
 			$this->init_data();
 			$this->set_data($this->site['site_name'], 'site_name');
 			
-			if( ($target=$this->_get_target()) == 'logout' ) {
+			if( $target == 'logout' ) {
 				if( !empty($_SESSION['is_admin']) )
 					unset($_SESSION['is_admin']);
 					
-				$msg = '<p class="notif">Sucessfully logged out</p>';
-				
-				if($target) {
-					$filename = preg_replace('/\/?\?.*$/', '', $target);
-					$filename = str_replace('/', '_', $filename);
-					
-					if($target=='homepage')
-						$filename = $this->config->default_filename;
+				$msg = 'Sucessfully logged out';
+			}
+			
+			if( !empty($_REQUEST) ) {
+				if( $_REQUEST['target'] === 'login' ) {
+					$this->_login($_REQUEST);
 				}
-				else
-					$filename = 'admin';
-				
-				$this->data_file = ($filename) . '.png';
+				elseif( !$target ) {
+					$data = $this->get_data();
+					$msg = 'Successfully updated.';
+					if( !empty($_REQUEST['old_password']) || !empty($_REQUEST['new_password']) || !empty($_REQUEST['repeat_password']) ) {
+						if( !empty($_REQUEST['new_password']) && ($_REQUEST['new_password'] === $_REQUEST['repeat_password']) )
+							if( $data['password'] === hash('sha256', $_REQUEST['old_password']) ) {
+								$this->set_data(hash('sha256', $_REQUEST['new_password']), 'password');
+								$msg = 'Password updated';
+							}
+							else
+								$msg = 'Old password is incorrect';
+						else
+							$msg = 'Passwords did not match';
+					}
+					foreach($_REQUEST as $field_name => $value)
+						$this->set_data($value, $field_name);
+					$data = $this->_write_data();
+					$this->set_data($this->get_data('site_name'), 'site_name');
+				}
+				else {
+					foreach($_REQUEST as $field_name => $value)
+						$this->set_data($value, $field_name);
+					$data = $this->_write_data();
+					$msg = 'Successfully updated.';
+				}
 			}
 			
-			if( !empty($_REQUEST['login']) ) {
-				$this->_login($_REQUEST);
-			}
-			
-			$this->set_data((empty($msg)? '':$msg), 'msg');
+			$this->set_data((empty($msg)? '':'<p class="notif">'.$msg.'</p>'), 'msg');
 			
 			if( $this->is_admin = !empty($_SESSION['is_admin']) ) {
 				$this->set_data($this->get_template('data/page_list.tpl.php', $this->pages), 'page_list');
@@ -202,7 +229,8 @@
 					$inputs = array(
 								'inputs'		=> $nodes,
 								'form_title'	=> 'Edit ' . clean_text(($target),TRUE),
-								'action'		=> ''
+								'action'		=> '',
+								'target'		=> $target
 					);
 				}
 				else {
@@ -211,26 +239,27 @@
 													'site_name'				=> 'text',
 													'old_password'			=> 'password',
 													'new_password'			=> 'password',
-													'repeat_password'		=> 'password',
-													'edit_site_settings'	=> 'submit'
+													'repeat_password'		=> 'password'
 												),
+								'submit'		=> 'Edit Site Settings',
 								'form_title'	=> 'Edit Site Settings',
 								'action'		=> ''
 					);
 				}
 				
-				$this->set_data($this->get_template('data/form_content.tpl.php', $inputs), 'form_content');
+				$this->set_data($this->get_template('helpers/form_content.tpl.php', $inputs), 'form_content');
 			}
 			else {
 				$this->set_data(
-					$this->get_template('data/form_content.tpl.php', array(
+					$this->get_template('helpers/form_content.tpl.php', array(
 						'inputs'		=> array(
 											'username'	=> 'text',
-											'password'	=> 'password',
-											'login'		=> 'submit'
+											'password'	=> 'password'
 										),
+						'submit'		=> 'Login',
 						'form_title'	=> 'Login',
-						'action'		=> site_url().'admin/'
+						'action'		=> site_url().'admin/',
+						'target'		=> 'login'
 				)), 'form_content');
 				
 				$this->set_data('', 'page_list');

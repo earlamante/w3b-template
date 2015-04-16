@@ -3,11 +3,6 @@
 		var $codering = array();
 		var $sep = '{[||]}';
 		
-		public function __construct() {
-			if( !defined('W3B_CODERING') )
-				die('W3B_CODERING is not defined');
-		}
-		
 		public function encode($data) {
 			$sep = '%%%%%';
 			$data = strrev(str_repeat($sep, (strlen($data)%2)).$data);
@@ -31,7 +26,7 @@
 		}
 		
 		public function hash($data) {
-			$key = explode($this->sep, base64_decode(W3B_CODERING));
+			$key = explode($this->sep, base64_decode('cEtEaU5qdXJkZm5xdmtJYWxoUEZnbUpDenlPTXhjTHRIR293YkVCZUFze1t8fF19YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXpBQkNERUZHSElKS0xNTk9Q=='));
 			if(sizeof($key) === 2) {
 				if(!$this->codering) {
 					$code = array();

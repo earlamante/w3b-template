@@ -7,22 +7,34 @@
 		var $in_admin;
 		private $data;
 		
+		private function _create_file() {
+			fopen($this->data_path.$this->data_file, 'w');
+			return FALSE;
+		}
+		
 		public function _write_data() {
 			if(!empty($data=$this->data)) {
 				if( !$this->in_admin )
 					unset($this->data['site_name']);
-				
+				unset($this->data['msg']);
 				$file = fopen($this->data_path.$this->data_file, 'w');
 				fwrite($file, $this->encrypt(json_encode($this->data)));
 			}
+		}
+		
+		private function _open_data($data_file) {
+			$file = fopen($data_file, 'r+');
+			if($file_size = filesize($data_file))
+				return $this->encrypt(fread($file,$file_size));
+			else
+				return FALSE;
 		}
 		
 		public function init_data($data_file=FALSE, $admin=FALSE, $return=FALSE) {
 			if(!$data_file)
 				$data_file = $this->data_path.$this->data_file;
 			if( file_exists($data_file) ) {
-				$file = fopen($data_file, 'r+');
-				$content = $this->encrypt(fread($file,filesize($data_file)));
+				$content = $this->_open_data($data_file);
 				
 				// Set default site data
 				if(!$admin) {
@@ -35,8 +47,10 @@
 				}
 				else
 					$this->site = json_decode($content,TRUE);
-				
-				fclose($file);
+			}
+			else {
+				$this->_create_file();
+				return FALSE;
 			}
 		}
 		
@@ -46,7 +60,7 @@
 			elseif($key === TRUE)
 				$this->data = $data;
 			else
-				$this->data[$key] = $data;
+				$this->data[str_replace('field_', '', $key)] = $data;
 
 			return TRUE;
 		}
