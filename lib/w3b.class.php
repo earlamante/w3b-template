@@ -41,7 +41,7 @@
 		private function _set_template() {
 			if($uri = $this->rewrite['uri']){
 				$filename = preg_replace('/\/?\?.*$/', '', $uri);
-				$filename = str_replace('/', '_', $filename);
+				$filename = str_replace(array(' ','/'), array('-','_'), $filename);
 			}
 			else
 				$filename = $this->config->default_filename;
@@ -158,7 +158,7 @@
 			
 			if(($target=$this->_get_target())) {
 				$filename = preg_replace('/\/?\?.*$/', '', $target);
-				$filename = str_replace('/', '_', $filename);
+				$filename = str_replace(array(' ','/'), array('-','_'), $filename);
 				
 				if($target=='homepage')
 					$filename = $this->config->default_filename;
