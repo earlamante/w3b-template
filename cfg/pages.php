@@ -10,7 +10,7 @@
 			'title'		=> 'text',
 			
 			'subpage'	=> array(
-				'the_team'	=> array(
+				'the-team'	=> array(
 					'title'		=> 'text',
 					'content'	=> 'wysiwyg'
 				),

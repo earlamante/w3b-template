@@ -134,6 +134,7 @@
 				if( is_array($val) ) {
 						
 					if( array_key_exists('subpage', $val) ) {
+						$page_list[] = $page_name;
 						$page_list[$page_name] = $this->_prepare_page_list_cleanup($val['subpage']);
 					}
 					else
@@ -224,6 +225,7 @@
 						else
 							$nodes = $nodes[$node];
 					}
+					unset($nodes['subpage']);
 					
 					$inputs = array(
 								'inputs'		=> $nodes,
@@ -306,7 +308,7 @@
 		public function update_fields($data, $fields=array()) {
 			foreach($data as $field_name => $value)
 				if( in_array($field_name, $fields) || empty($fields) )
-					$this->set_data($value, $field_name);
+					$this->set_data($value, htmlentities($field_name) );
 			$data = $this->_write_data();
 			
 			return "Successfully updated";
@@ -314,7 +316,7 @@
 		
 		public function update_field($data) {
 			foreach($data as $field_name => $value)
-				$this->set_data($value, $field_name);
+				$this->set_data($value, htmlentities($field_name) );
 			$data = $this->_write_data();
 			
 			return "Successfully updated";
@@ -336,7 +338,7 @@
 	}
 	
 	function clean_text($text, $cap=FALSE) {
-		$text = str_replace(array('_','/'), array(' ',' / '), $text);
+		$text = str_replace(array('_','-','/'), array(' ',' ',' / '), $text);
 		if($cap)
 			return ucwords($text);
 		return $text;
