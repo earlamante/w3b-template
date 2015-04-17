@@ -183,28 +183,27 @@
 				}
 				elseif( !$target ) {
 					$data = $this->get_data();
-					$msg = 'Successfully updated.';
+					
 					if( !empty($_REQUEST['old_password']) || !empty($_REQUEST['new_password']) || !empty($_REQUEST['repeat_password']) ) {
 						if( !empty($_REQUEST['new_password']) && ($_REQUEST['new_password'] === $_REQUEST['repeat_password']) )
 							if( $data['password'] === hash('sha256', $_REQUEST['old_password']) ) {
-								$this->set_data(hash('sha256', $_REQUEST['new_password']), 'password');
-								$msg = 'Password updated';
+								$msg = $this->update_field(array(
+									'password'	=> hash('sha256', $_REQUEST['new_password'])
+								));
 							}
 							else
 								$msg = 'Old password is incorrect';
 						else
 							$msg = 'Passwords did not match';
 					}
-					foreach($_REQUEST as $field_name => $value)
-						$this->set_data($value, $field_name);
-					$data = $this->_write_data();
+					
+					$msg = $this->update_fields($_REQUEST, array(
+						'site_name'
+					));
 					$this->set_data($this->get_data('site_name'), 'site_name');
 				}
 				else {
-					foreach($_REQUEST as $field_name => $value)
-						$this->set_data($value, $field_name);
-					$data = $this->_write_data();
-					$msg = 'Successfully updated.';
+					$msg = $this->update_fields($_REQUEST);
 				}
 			}
 			
@@ -241,7 +240,7 @@
 													'new_password'			=> 'password',
 													'repeat_password'		=> 'password'
 												),
-								'submit'		=> 'Edit Site Settings',
+								'submit'		=> 'Edit Settings',
 								'form_title'	=> 'Edit Site Settings',
 								'action'		=> ''
 					);
@@ -268,9 +267,10 @@
 		
 		// Front Page
 		public function run() {
+			if( file_exists('view/main.php') )
+				require_once('view/main.php');
 			if($this->in_admin)
 				$this->_start_admin();
-			
 			$this->print_output($this->get_data());
 		}
 		
@@ -301,6 +301,23 @@
 		// Helper
 		public function site_url() {
 			return strip_trailing_slash($this->config->site_url,'/');
+		}
+		
+		public function update_fields($data, $fields=array()) {
+			foreach($data as $field_name => $value)
+				if( in_array($field_name, $fields) || empty($fields) )
+					$this->set_data($value, $field_name);
+			$data = $this->_write_data();
+			
+			return "Successfully updated";
+		}
+		
+		public function update_field($data) {
+			foreach($data as $field_name => $value)
+				$this->set_data($value, $field_name);
+			$data = $this->_write_data();
+			
+			return "Successfully updated";
 		}
 	}
 	
