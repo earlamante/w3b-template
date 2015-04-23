@@ -1,3 +1,12 @@
+<?php
+/**
+ * Template Name: Admin Pages
+ *
+ * This is the template for the W3b Template admin pages.
+ *
+ * @since Version 1.3
+ */
+?>
 <html>
 	<head>
 		<title>{{site_name}}</title>

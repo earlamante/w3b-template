@@ -1,4 +1,9 @@
 <?php
+/**
+ * This is the error 403 "Permission Denied" with the W3B Template skin
+ *
+ * @since Version 1.3
+ */
 	$url = str_replace('403.php', '', $_SERVER['PHP_SELF']);
 ?>
 <html>

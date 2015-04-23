@@ -1,3 +1,12 @@
+<?php
+/**
+ * Section Name: Page list
+ *
+ * This section lists the declared pages of the site and serve as the menu area for the admin pages.
+ *
+ * @since Version 1.3
+ */
+?>
 <form>
 	<label for="page">Edit Page Data:</label>
 	<select id="page" name="page">

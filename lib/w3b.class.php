@@ -1,4 +1,9 @@
 <?php
+/**
+ * 
+ * 
+ * @since Version 1.3
+ */
 	include('cfg/settings.php');
 	include('dm.class.php');
 	
@@ -12,6 +17,7 @@
 		var $is_admin;
 		
 		public function __construct() {
+			parent::__construct();
 			// List of functions to prepare the required data
 			$this->_set_site_data();
 			$this->_set_config();
@@ -101,6 +107,13 @@
 			return $pattern;
 		}
 		
+		private function _set_page_schema() {
+			if( empty($this->pages['page_schema']) ) {
+				require_once('cfg/pages.php');
+				$this->pages['page_schema'] = $pages;
+			}
+		}
+		
 		// Admin
 		private function _check_admin() {
 			preg_match( '/^admin\/?/', $this->rewrite['uri'], $matches);
@@ -151,9 +164,8 @@
 		
 		private function _start_admin() {
 			session_start();
+			$this->_set_page_schema();
 			
-			require_once('cfg/pages.php');
-			$this->pages['page_schema'] = $pages;
 			$this->pages['page_list'] = $this->_prepare_page_list($pages);
 			
 			if(($target=$this->_get_target())) {
@@ -321,6 +333,11 @@
 			
 			return "Successfully updated";
 		}
+		
+		public function get_page_list() {
+			$this->_set_page_schema();
+			return $this->_prepare_page_list_cleanup($this->pages['page_schema']);
+		}
 	}
 	
 	$w3b = new W3B();
@@ -329,6 +346,11 @@
 	function site_url() {
 		global $w3b;
 		return $w3b->site_url();
+	}
+	
+	function get_pages() {
+		global $w3b;
+		return $w3b->get_page_list();
 	}
 	
 	function strip_trailing_slash($text, $append='', $both=FALSE) {

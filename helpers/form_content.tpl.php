@@ -1,3 +1,12 @@
+<?php
+/**
+ * Section Name: Admin Forms
+ *
+ * This section will display the list of fields declared for the chosen page.
+ *
+ * @since Version 1.3
+ */
+?>
 <h2><?php echo $form_title; ?></h2>
 
 <form action="<?php echo $action; ?>" method="post">

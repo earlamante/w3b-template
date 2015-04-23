@@ -1,4 +1,9 @@
 <?php
+/**
+ * This is the error 404 "Page Not Found" with the W3B Template skin
+ *
+ * @since Version 1.3
+ */
 	if(empty($url))
 		$url = explode('index.php', $_SERVER['PHP_SELF'])[0].'data/';
 ?>
