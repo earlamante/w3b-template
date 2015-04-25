@@ -8,17 +8,29 @@
  * @since Version 1.3
  */
 	class W3B_Code {
-		var $codering = array();	// The codering is used for encoding/decoding the data
-		var $sep = '{[||]}';		// Separator for the key
-		var $key;					// Unique key to be used by $codering
+		var $salt 		= 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';	// This is the safest hash, complete lowercase and uppercase of the alphabet
+		var $sep 		= '{[||]}';													// Separator for the key
+		var $codering 	= array();													// The codering is used for encoding/decoding the data
+		var $key;																	// Unique key to be used by $codering
 		
 		/**
-		 * Runs the function on load and will set the unique $key
+		 * Runs the function on load and will stop the operation if
+		 * the $data key string is empty
+		 *
+		 * @param String $data key, to be generated if blank
 		 * 
 		 * @since Version 1.3
 		 */
-		public function __construct() {
-			$this->key = base64_decode('cEtEaU5qdXJkZm5xdmtJYWxoUEZnbUpDenlPTXhjTHRIR293YkVCZUFze1t8fF19YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXpBQkNERUZHSElKS0xNTk9Q==');
+		public function __construct($data=FALSE) {
+			if(!$data) {
+				echo 'You did not supply a valid key try to enter the following code as a parameter below:<br /><br />';
+				$key_string = json_encode($this->generate_key());
+				echo base64_encode($key_string);
+				die;
+			}
+			else {
+				$this->key = base64_decode(json_decode(base64_decode($data)));
+			}
 		}
 		
 		/**
@@ -30,7 +42,17 @@
 		 * @since Version 1.3
 		 */
 		public function encode($data) {
-			$sep = '%%%%%';
+			$sep = '%%%';
+			$append = '===99';
+			
+			$string = base64_decode($this->hash($data));
+			preg_match('/===99$/', $string, $matches);
+			
+			if($matches) {
+				$data = preg_replace('/===99$/', '', $string);
+				$append = FALSE;
+			}
+			
 			$data = strrev(str_repeat($sep, (strlen($data)%2)).$data);
 			$group = str_split($data, strlen($data)/2);
 			$return = array(
@@ -48,7 +70,15 @@
 				);
 				$return[$y] = implode('', $return[$y]);
 			}
-			return str_replace($sep, '', implode('', $return));
+			
+			$return = str_replace($sep, '', implode('', $return)).$append;
+			if($append) {
+				$return = base64_encode($return);
+			}
+			else
+				$return = $this->hash($return);
+			
+			return $return;
 		}
 		
 		/**
@@ -100,13 +130,12 @@
 		/**
 		 * Generate a new key string based on the charset provided
 		 *
-		 * @param String $char_set accepts alphanumeric characters only
 		 * @return String
 		 * 
 		 * @since Version 1.3
 		 */
-		public function generate_key($char_set) {
-			$salt = preg_replace('/[^a-zA-Z]/','',$char_set);
+		public function generate_key() {
+			$salt = preg_replace('/[^a-zA-Z]/','',$this->salt);
 			$salt = str_replace('Z', '', implode('', array_unique(str_split($salt))));
 			$salt .= str_repeat('Z', strlen($salt)%2);
 			$code = array();

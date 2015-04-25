@@ -21,10 +21,12 @@
 		/**
 		 * Loads the parent construct on load
 		 * 
+		 * @param String $data key, to be generated if blank
+		 * 
 		 * @since Version 1.3
 		 */
-		public function __construct() {
-			parent::__construct();
+		public function __construct($key=FALSE) {
+			parent::__construct($key);
 		}
 		
 		/**
