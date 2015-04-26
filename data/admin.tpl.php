@@ -24,6 +24,7 @@
 				toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
 			});
 		</script>
+		<link rel="icon" type="image/png" href="<?php echo site_url(); ?>data/favicon.png" />
 		<link href="<?php echo site_url(); ?>data/css/style.css" rel="stylesheet" />
 	</head>
 	<body class="admin">

@@ -429,7 +429,7 @@
 				extract($data);
 			$content = '';
 			foreach($this->config->page_layout as $page)
-				$content .= $this->get_template($page);
+				$content .= $this->get_template($page, $data);
 			
 			return $this->_apply_templating($content);
 		}
@@ -580,6 +580,20 @@
 		if($cap)
 			return ucwords($text);
 		return $text;
+	}
+
+	/**
+	 * Convert a text to a valid css class
+	 * 
+	 * @param String $text
+	 * @return String
+	 *
+	 * @since Version 1.3
+	 */
+	function text_to_class($text) {
+		$text = preg_replace('/[^\w- ]/', '', $text);
+		$text = str_replace(array('_',' '), array('-','-'), $text);
+		return strtolower($text);
 	}
 
 	/**

@@ -12,8 +12,8 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright 2015 W3Bkit
  *
-	 * @version 1.3
-	 */
+ * @version 1.3
+ */
 	 
 	 /**
 	  * This will include then load the main class of the template engine.
