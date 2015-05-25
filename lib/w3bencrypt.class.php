@@ -8,10 +8,10 @@
  * @since Version 1.3
  */
 	class W3B_Code {
-		var $salt 		= 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';	// This is the safest hash, complete lowercase and uppercase of the alphabet
-		var $sep 		= '{[||]}';													// Separator for the key
-		var $codering 	= array();													// The codering is used for encoding/decoding the data
-		var $key;																	// Unique key to be used by $codering
+		var $salt 	= 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';	// This is the safest hash, complete lowercase and uppercase of the alphabet
+		var $sep 		= '{[||]}';										// Separator for the key
+		var $codering 	= array();										// The codering is used for encoding/decoding the data
+		var $key;														// Unique key to be used by $codering
 		
 		/**
 		 * Runs the function on load and will stop the operation if
@@ -23,7 +23,7 @@
 		 */
 		public function __construct($data=FALSE) {
 			if(!$data) {
-				echo 'You did not supply a valid key try to enter the following code as a parameter below:<br /><br />';
+				echo 'You did not supply a valid key edit the cfg/settings.php file and enter the encryption key below:<br /><br />';
 				$key_string = json_encode($this->generate_key());
 				echo base64_encode($key_string);
 				die;

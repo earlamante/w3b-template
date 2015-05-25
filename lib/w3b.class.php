@@ -9,10 +9,14 @@
 	 * Includes the file for the data-manager subpackage
 	 */
 	include('dm.class.php');
+	/**
+	 * Includes the site settings
+	 */
+	include('cfg/settings.php');
 	
 	class W3B extends Data_Manager {		
-		var $site 		= array();	// General site data
-		var $pages 		= array();	// Pages data
+		var $site 	= array();	// General site data
+		var $pages 	= array();	// Pages data
 		var $rewrite 	= array();	// Rewrite data
 		var $config 	= array();	// Site configuration data
 		
@@ -26,12 +30,13 @@
 		 *
 		 * @since Version 1.3
 		 */
-		public function __construct($key=FALSE) {
-			parent::__construct($key);
+		public function __construct() {
+			global $config;
+			parent::__construct($config['encryption_key']);
 
 			// List of functions to prepare the required data
-			$this->_set_site_data();
 			$this->_set_config();
+			$this->_set_site_data();
 			$this->_rewrite();
 			$this->_set_template();
 			$this->_set_page_schema();
@@ -52,7 +57,7 @@
 		 * @since Version 1.3
 		 */
 		private function _set_config() {
-			include('cfg/settings.php');
+			global $config;
 			$this->config = (object) $config;
 			$this->data_path = str_replace('index.php','data/',$_SERVER['SCRIPT_FILENAME']);
 		}
@@ -302,7 +307,7 @@
 				}
 				elseif( !$target ) {
 					$data = $this->get_data();
-					
+					$valid = TRUE;
 					if( !empty($_REQUEST['old_password']) || !empty($_REQUEST['new_password']) || !empty($_REQUEST['repeat_password']) ) {
 						if( !empty($_REQUEST['new_password']) && ($_REQUEST['new_password'] === $_REQUEST['repeat_password']) )
 							if( $data['password'] === hash('sha256', $_REQUEST['old_password']) ) {
@@ -310,16 +315,22 @@
 									'password'	=> hash('sha256', $_REQUEST['new_password'])
 								));
 							}
-							else
+							else {
+								$valid = FALSE;
 								$msg = 'Old password is incorrect';
-						else
+							}
+						else {
+							$valid = FALSE;
 							$msg = 'Passwords did not match';
+						}
 					}
 					
-					$msg = $this->update_fields($_REQUEST, array(
-						'site_name'
-					));
-					$this->set_data($this->get_data('site_name'), 'site_name');
+					if( $valid ) {
+						$msg = $this->update_fields($_REQUEST, array(
+							'site_name'
+						));
+						$this->set_data($this->get_data('site_name'), 'site_name');
+					}
 				}
 				else {
 					$msg = $this->update_fields($_REQUEST);
@@ -520,7 +531,7 @@
 		 */
 	}
 	
-	$w3b = new W3B('IlMxZEZiMVpNYkZSQlZVcG5kbkZrV201UFNFUkNiVkZUVFZocGRVZDBZMUpEYzA1cllXWjVTWEpaZDBaNGFHcGxZbnBRY0h0YmZIeGRmV0ZpWTJSbFptZG9hV3ByYkcxdWIzQnhjbk4wZFhaM2VIbDZRVUpEUkVWR1IwaEpTa3RNVFU1UFVGRlNVMVJWVmxkWVdWbz0i');
+	$w3b = new W3B();
 	
 	/**
 	 * Helper function section starts here

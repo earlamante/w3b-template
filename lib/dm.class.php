@@ -13,8 +13,8 @@
 	include('w3bencrypt.class.php');
 	
 	class Data_Manager extends W3B_Code {
-		var $data_path;		// Path of the directory that stores the encrypted data files
-		var $data_file;		// Filename of the encrypted data file that will be used by the page
+		var $data_path;	// Path of the directory that stores the encrypted data files
+		var $data_file;	// Filename of the encrypted data file that will be used by the page
 		var $in_admin;		// Boolean to determine if you're inside the the admin pages or not
 		private $data;		// Private variable that stores the data from the encrypted data file of the page
 		
@@ -64,9 +64,33 @@
 				if( !$this->in_admin )
 					unset($this->data['site_name']);
 				unset($this->data['msg']);
+
 				$file = fopen($this->data_path.$this->data_file, 'w');
 				fwrite($file, $this->encrypt(json_encode($this->data)));
 			}
+		}
+
+		/**
+		 * This will create the dummy data for the first run
+		 * 
+		 * @since Version 1.4
+		 */
+		private function _dummy_data() {
+			$this->in_admin = TRUE;
+			$this->data_file = 'admin.png';
+			$this->site = $this->data = array(
+				'site_name'	=> 'W3Bkit',
+				'username'	=> 'admin',
+				'password'	=> 'e3a37cdaa64efb8bd363912bde159295e2ea3847813dc660e6cd0cded0a47beb'
+			);
+			$this->_write_data();
+
+			$this->data_file = 'index.png';
+			$this->data = array(
+				'title'	=> 'Welcome to W3B Template',
+				'content'	=> '<p>Hope you will find this engine handy.</p><p>Please don\'t hesitate to drop us a feedback <a href="mailto:info@w3bkit.com">info@w3bkit.com</a></p>'
+			);
+			$this->_write_data();
 		}
 		
 		/**
@@ -84,7 +108,7 @@
 				$data_file = $this->data_path.$this->data_file;
 			if( file_exists($data_file) ) {
 				$content = $this->_open_data($data_file);
-				
+
 				// Set default site data
 				if(!$admin) {
 					if(!$return) {
@@ -94,8 +118,13 @@
 					else
 						return json_decode($content,TRUE);
 				}
-				else
+				else {
 					$this->site = json_decode($content,TRUE);
+					
+					if( empty( $this->site ) ) {
+						$this->_dummy_data();
+					}					
+				}
 			}
 			else {
 				$this->_create_file();

@@ -12,7 +12,7 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright 2015 W3Bkit
  *
- * @version 1.3
+ * @since Version 1.3
  */
 	 
 	 /**
